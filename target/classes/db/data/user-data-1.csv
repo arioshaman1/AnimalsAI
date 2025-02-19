@@ -1,0 +1,3 @@
+id,email,username,password,role,status
+1,user@mail.com,User,$2a$12$NCmE.A2PgEoB0lmemLsA0Ok0fwTsQ2UUAVBF86E8SHwP/bq.0DHUW,USER,ACTIVE
+2,admin@mail.com,Admin,$2a$12$v0nfqCdgY14kZKmjHrSf1u0iyj8jpeVgfvTseUuIi7iVpRqXTX8li,ADMIN,ACTIVE
