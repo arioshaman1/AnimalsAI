@@ -3,6 +3,7 @@ import com.example.photo_uploader.Repository.FileMetadataRepository;
 import com.example.photo_uploader.entities.FileMetadata;
 import io.minio.*;
 import io.minio.errors.MinioException;
+import io.minio.messages.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -82,5 +83,8 @@ public class MinioService {
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при скачивании файла", e);
         }
+    }
+    public Iterable<Result<Item>> listFiles() {
+        return minioClient.listObjects(ListObjectsArgs.builder().bucket(bucketName).build());
     }
 }
