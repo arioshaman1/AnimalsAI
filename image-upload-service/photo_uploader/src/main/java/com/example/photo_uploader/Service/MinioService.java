@@ -1,4 +1,6 @@
 package com.example.photo_uploader.Service;
+import com.example.photo_uploader.Repository.FileMetadataRepository;
+import com.example.photo_uploader.entities.FileMetadata;
 import io.minio.*;
 import io.minio.errors.MinioException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -15,8 +18,13 @@ public class MinioService {
     @Autowired
     private MinioClient minioClient;
 
+    @Autowired
+    private FileMetadataRepository fileMetadataRepository;
+
     @Value("${minio.bucket}")
     private String bucketName;
+
+
 
     public String uploadFile(MultipartFile file) {
         try {
@@ -49,8 +57,16 @@ public class MinioService {
                                 .build()
                 );
             }
+            FileMetadata metadata = new FileMetadata();
+            metadata.setFileName(fileName);
+            metadata.setOriginalFileName(file.getOriginalFilename());
+            metadata.setFileSize(file.getSize());
+            metadata.setFileType(file.getContentType());
+            metadata.setUploadTime(LocalDateTime.now());
+            fileMetadataRepository.save(metadata);
 
-            return fileName; // Возвращаем имя файла
+            return fileName;
+
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при загрузке файла в MinIO", e);
         }
