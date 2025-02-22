@@ -10,6 +10,7 @@ model = load_model('model.h5')
 # Инициализация Flask приложения
 app = Flask(__name__)
 
+# Функция для предобработки изображения
 def preprocess_image(img_path, target_size=(128, 128)):
     img = image.load_img(img_path, target_size=target_size)
     img_array = image.img_to_array(img)
@@ -17,16 +18,17 @@ def preprocess_image(img_path, target_size=(128, 128)):
     img_array /= 255.0  # Нормализация
     return img_array
 
+# Функция для предсказания
 def predict_image(img_path):
     img_array = preprocess_image(img_path)
     prediction = model.predict(img_array)
     predicted_class = np.argmax(prediction, axis=-1)
-    class_names = ["Cat", "Dog"]  # Замените на свои классы
+    class_names = ["Кот", "Собака"]  # Замените на свои классы
     predicted_label = class_names[predicted_class[0]]
     predicted_prob = np.max(prediction)  # Максимальная вероятность
     return predicted_label, predicted_prob
 
-
+# Маршрут для обработки POST-запросов
 @app.route('/predict', methods=['POST'])
 def predict():
     if 'file' not in request.files:
