@@ -1,4 +1,5 @@
 package com.example.photo_uploader.Service;
+
 import com.example.photo_uploader.Repository.FileMetadataRepository;
 import com.example.photo_uploader.entities.FileMetadata;
 import io.minio.*;
@@ -24,7 +25,6 @@ public class MinioService {
 
     @Value("${minio.bucket}")
     private String bucketName;
-
 
 
     public String uploadFile(MultipartFile file) {
@@ -72,6 +72,7 @@ public class MinioService {
             throw new RuntimeException("Ошибка при загрузке файла в MinIO", e);
         }
     }
+
     public InputStream downloadFile(String fileName) {
         try {
             return minioClient.getObject(
@@ -84,6 +85,7 @@ public class MinioService {
             throw new RuntimeException("Ошибка при скачивании файла", e);
         }
     }
+
     public Iterable<Result<Item>> listFiles() {
         return minioClient.listObjects(ListObjectsArgs.builder().bucket(bucketName).build());
     }
