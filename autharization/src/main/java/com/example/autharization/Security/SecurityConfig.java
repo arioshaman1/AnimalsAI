@@ -1,5 +1,5 @@
 package com.example.autharization.Security;
-import com.example.autharization.JWT.JwtRequestFilter;
+import com.example.autharization.JWT.JwtCookieFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Autowired
-    private JwtRequestFilter jwtRequestFilter;
+    private JwtCookieFilter jwtCookieFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Без состояния (stateless)
                 )
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // Добавляем JWT фильтр
+                .addFilterBefore(jwtCookieFilter, UsernamePasswordAuthenticationFilter.class); // Добавляем JWT фильтр
 
         return http.build();
     }
