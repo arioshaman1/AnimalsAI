@@ -1,12 +1,13 @@
 package com.example.autharization.entities;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-
+@Schema(description = "user entity")
 @Entity
 public class AuthEntity {
     @Id

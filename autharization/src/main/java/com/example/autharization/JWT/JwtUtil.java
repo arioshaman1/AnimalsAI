@@ -13,10 +13,9 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
+
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-
-    private static final long EXPIRATION_TIME = 864_000_000;
-
+    private static final long EXPIRATION_TIME = 864_000_000; // 10 дней
 
     public String generateToken(String username) {
         return Jwts.builder()
@@ -27,6 +26,18 @@ public class JwtUtil {
                 .compact();
     }
 
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public String extractUsername(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)
@@ -34,20 +45,5 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            Jws<Claims> claims = Jwts.parserBuilder()
-                    .setSigningKey(SECRET_KEY)
-                    .build()
-                    .parseClaimsJws(token);
-
-            // Проверяем, что токен не истек
-            return !claims.getBody().getExpiration().before(new Date());
-        } catch (Exception e) {
-            // Если токен невалидный (истек или подпись неверна)
-            return false;
-        }
     }
 }

@@ -17,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
     @Autowired
     private JwtCookieFilter jwtCookieFilter;
 
@@ -26,7 +25,14 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Отключаем CSRF
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register", "/auth/login").permitAll() // Разрешаем доступ без аутентификации
+                        .requestMatchers(
+                                "/auth/register",
+                                "/auth/login",
+                                "/swagger-ui.html",       // Разрешаем доступ к Swagger UI
+                                "/swagger-ui/**",         // Разрешаем доступ к Swagger UI (новые версии)
+                                "/v3/api-docs/**",        // Разрешаем доступ к документации API
+                                "/swagger-resources/**",  // Разрешаем доступ к ресурсам Swagger
+                                "/webjars/**"  ).permitAll() // Разрешаем доступ без аутентификации
                         .anyRequest().authenticated() // Все остальные запросы требуют аутентификации
                 )
                 .sessionManagement(session -> session
