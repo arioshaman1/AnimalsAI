@@ -8,13 +8,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor("your-512-bit-secret-key-must-be-at-least-512-bits-long".getBytes());
     private static final long EXPIRATION_TIME = 864_000_000; // 10 дней
 
     public String generateToken(String username) {
