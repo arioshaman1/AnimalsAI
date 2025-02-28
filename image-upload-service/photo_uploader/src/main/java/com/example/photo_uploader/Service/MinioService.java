@@ -27,7 +27,7 @@ public class MinioService {
     private String bucketName;
 
 
-    public String uploadFile(MultipartFile file) {
+    public String uploadFile(MultipartFile file, String username) {
         try {
             // Проверяем, существует ли бакет
             boolean isExist = minioClient.bucketExists(
@@ -58,12 +58,16 @@ public class MinioService {
                                 .build()
                 );
             }
+
+            // Создаём метаданные файла
             FileMetadata metadata = new FileMetadata();
             metadata.setFileName(fileName);
             metadata.setOriginalFileName(file.getOriginalFilename());
             metadata.setFileSize(file.getSize());
             metadata.setFileType(file.getContentType());
             metadata.setUploadTime(LocalDateTime.now());
+            metadata.setUsername(username);  // Устанавливаем username
+
             fileMetadataRepository.save(metadata);
 
             return fileName;
