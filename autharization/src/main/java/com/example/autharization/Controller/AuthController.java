@@ -40,7 +40,6 @@ public class AuthController {
             // Создаем cookie с токеном
             Cookie cookie = new Cookie("token", token);
             cookie.setHttpOnly(true); // Защита от XSS
-            cookie.setSecure(true); // Только для HTTPS
             cookie.setPath("/"); // Доступно для всех путей
             cookie.setMaxAge(86400); // Время жизни cookie (в секундах)
 

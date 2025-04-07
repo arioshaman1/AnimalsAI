@@ -8,8 +8,6 @@ public class AuthEntityDTO {
     private String password;
     private String email;
 
-    public AuthEntityDTO() {
-    }
 
     public AuthEntityDTO(String username, String password, String email) {
         this.username = username;
