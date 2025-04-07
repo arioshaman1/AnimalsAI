@@ -23,7 +23,7 @@ def predict_image(img_path):
     img_array = preprocess_image(img_path)
     prediction = model.predict(img_array)
     predicted_class = np.argmax(prediction, axis=-1)
-    class_names = ["Кот", "Собака"]  # Замените на свои классы
+    class_names = ["Cat", "Dog"]  # Замените на свои классы
     predicted_label = class_names[predicted_class[0]]
     predicted_prob = np.max(prediction)  # Максимальная вероятность
     return predicted_label, predicted_prob
@@ -32,31 +32,33 @@ def predict_image(img_path):
 @app.route('/predict', methods=['POST'])
 def predict():
     if 'file' not in request.files:
+        print("No file in request")
         return jsonify({'error': 'No file uploaded'}), 400
 
     file = request.files['file']
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
+    print(f"Received file: {file.filename}")
 
-    # Сохраняем файл временно
+    # Сохраняем временно
     file_path = os.path.join('uploads', file.filename)
     file.save(file_path)
+    print(f"Saved file to {file_path}")
 
-    # Делаем предсказание
     try:
         label, probability = predict_image(file_path)
         response = {
             'label': label,
             'probability': float(probability)
         }
+        print(f"Prediction result: {response}")
         return jsonify(response)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-    finally:
-        # Удаляем временный файл
-        if os.path.exists(file_path):
-            os.remove(file_path)
 
+    except Exception as e:
+        print(f"Error processing image: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+    finally:
+        os.remove(file_path)
+        print(f"Deleted file {file_path}")
 # Запуск Flask приложения
 if __name__ == '__main__':
     # Создаем папку для загрузок, если её нет
